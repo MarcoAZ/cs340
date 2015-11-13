@@ -1,0 +1,18 @@
+﻿table {
+	border: 2px solid #000000;
+	border-collapse:collapse;
+}
+
+th {
+	border: 1px solid #000000;	
+}
+
+td {
+	border: 1px solid #000000;	
+}
+
+fieldset {
+	border: 1px solid #444444;
+	margin:5px;
+	padding: 5px;
+}
