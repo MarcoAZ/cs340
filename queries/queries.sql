@@ -48,8 +48,14 @@ CREATE TABLE `playerCharacter` (
 	`classId` int NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`characterName`),
-	FOREIGN KEY (`classId`) REFERENCES `characterClass`(`id`),
-	FOREIGN KEY (`playerId`) REFERENCES `player`(`id`)
+	FOREIGN KEY (`classId`) 
+		REFERENCES `characterClass`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (`playerId`) 
+		REFERENCES `player`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `itemInstance` (
@@ -57,16 +63,28 @@ CREATE TABLE `itemInstance` (
 	`classId` int NOT NULL,
 	`owner` int NOT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`classId`) REFERENCES `itemClass`(`id`),
-	FOREIGN KEY (`owner`) REFERENCES `playerCharacter`(`id`)
+	FOREIGN KEY (`classId`) 
+		REFERENCES `itemClass`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (`owner`) 
+		REFERENCES `playerCharacter`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `pCharSkill` (
 	`pCharId` int NOT NULL,
 	`skillId` int NOT NULL,
 	PRIMARY KEY (`pCharId`, `skillId`),
-	FOREIGN KEY (`pCharId`) REFERENCES `playerCharacter`(`id`),
-	FOREIGN KEY (`skillId`) REFERENCES `skill`(`id`)
+	FOREIGN KEY (`pCharId`) 
+		REFERENCES `playerCharacter`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (`skillId`) 
+		REFERENCES `skill`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE	
 ) ENGINE=InnoDB;
 
 -- populate tables
