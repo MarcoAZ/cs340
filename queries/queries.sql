@@ -18,6 +18,9 @@ CREATE TABLE `itemClass` (
 CREATE TABLE `characterClass` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`className` varchar(255) NOT NULL,
+	`startLevel` tinyint UNSIGNED DEFAULT 1,
+	`startHealth` smallint UNSIGNED DEFAULT 100,
+	`startStrength` smallint UNSIGNED NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`className`)
 ) ENGINE=InnoDB;
@@ -90,14 +93,14 @@ CREATE TABLE `pCharSkill` (
 -- populate tables
 -- characterClass insert queries
 
-INSERT INTO characterClass (className)
-values ("warrior");
+INSERT INTO characterClass (className, startStrength)
+values ("warrior", 50);
 
-INSERT INTO characterClass (className)
-values ("sorcerer");
+INSERT INTO characterClass (className, startStrength)
+values ("sorcerer", 10);
 
-INSERT INTO characterClass (className)
-values ("archer");
+INSERT INTO characterClass (className, startStrength)
+values ("archer", 25);
 
 -- itemClass insert queries
 
@@ -147,19 +150,31 @@ values ("rogolfoTheBrave", "randomperson@blahblah.com");
 -- playerCharacter insert queries
 
 INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId)
-values ("Rognar", 1, 500, 100, 
+values ("Rognar", 
+	(SELECT startLevel FROM characterClass WHERE className = "warrior"),
+	(SELECT startHealth FROM characterClass WHERE className = "warrior"),
+	(SELECT startStrength FROM characterClass WHERE className = "warrior"),
 	(SELECT id FROM player WHERE userName = "rogolfoTheBrave"),
-	(SELECT id FROM characterClass WHERE className = "warrior"));
+	(SELECT id FROM characterClass WHERE className = "warrior")
+);
 
 INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId)
-values ("Drognestia", 1, 500, 100,
+values ("Drognestia",
+	(SELECT startLevel FROM characterClass WHERE className = "sorcerer"),
+	(SELECT startHealth FROM characterClass WHERE className = "sorcerer"),
+	(SELECT startStrength FROM characterClass WHERE className = "sorcerer"),
 	(SELECT id FROM player WHERE userName = "smartypants"),
-	(SELECT id FROM characterClass WHERE className = "sorcerer"));
+	(SELECT id FROM characterClass WHERE className = "sorcerer")
+);
 
 INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId)
-values ("Glimbloy", 1, 500, 100,
+values ("Glimbloy",
+	(SELECT startLevel FROM characterClass WHERE className = "archer"),
+	(SELECT startHealth FROM characterClass WHERE className = "archer"),
+	(SELECT startStrength FROM characterClass WHERE className = "archer"),
 	(SELECT id FROM player WHERE userName = "dragonSlayer"),
-	(SELECT id FROM characterClass WHERE className = "archer"));
+	(SELECT id FROM characterClass WHERE className = "archer")
+);
 
 
 

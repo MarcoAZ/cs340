@@ -83,7 +83,7 @@
 
 <?php
 	// get a list of classes
-	$stmt = $mysqli->prepare("SELECT id FROM characterClass ORDER BY id;");
+	$stmt = $mysqli->prepare("SELECT id, className FROM characterClass ORDER BY id;");
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
@@ -92,11 +92,11 @@
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	// bind the results to variables and display the results
-	if(!$stmt->bind_result($classId)){
+	if(!$stmt->bind_result($classId, $className)){
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	while($stmt->fetch()){
-	 echo "<option value=\"" . $classId . "\">" . $classId . ": " . "</option>";
+	 echo "<option value=\"" . $classId . "\">" . $classId . ":  " .  $className . "</option>";
 	}
 	$stmt->close();
 ?>
@@ -129,10 +129,12 @@
 					</select>
 				</p>
 
-				<p>Name: <input type="text" name="name" required/></p>
+				<p>Character Name: <input type="text" name="name" required/></p>
+<!--				
 				<p>Level: <input type="text" name="level" required/></p>
 				<p>Health: <input type="text" name="health" required/></p>		
-				<p>Strength: <input type="text" name="strength" required></p>												
+				<p>Strength: <input type="text" name="strength" required></p>		
+-->				
 				<p><input type="submit" name="addNew" value="Add Character" /></p>
 				
 			</fieldset>
