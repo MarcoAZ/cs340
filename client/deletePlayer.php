@@ -1,14 +1,5 @@
 <?php
-	// turn error reporting on
-	ini_set('display_errors', 'On');
-	$cFile = fopen("credentials.txt", "r");
-	$cInfo = fscanf($cFile, "%s\t%s\t%s\t%s");
-	// create a new mysqli object that connects to the database
-	$mysqli = new mysqli($cInfo[0], $cInfo[1], $cInfo[2], $cInfo[3]);
-	// if there's an error, report it:
-	if($mysqli->connect_errno) {
-		echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
+require("config.php");
 
 // get the info from the post
 $player = $_POST['playerToChange'];
