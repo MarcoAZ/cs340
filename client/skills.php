@@ -1,15 +1,4 @@
-<?php
-	// turn error reporting on
-	ini_set('display_errors', 'On');
-	$cFile = fopen("credentials.txt", "r");
-	$cInfo = fscanf($cFile, "%s\t%s\t%s\t%s");
-	// create a new mysqli object that connects to the database
-	$mysqli = new mysqli($cInfo[0], $cInfo[1], $cInfo[2], $cInfo[3]);
-	// if there's an error, report it:
-	if($mysqli->connect_errno) {
-		echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-?>
+<?php require("config.php"); ?>
 
 <!DOCTYPE html>
 <html>
@@ -21,7 +10,7 @@
 
 <body>
 
-<!-- table of players -->
+<!-- table of skills -->
 	<div id="skillsTable">
 		<table>
 			<caption><?php echo $_GET['cName'] . "'s Skills"; ?></caption>
@@ -30,11 +19,11 @@
 				<td>Skill Name</td>
 			</tr>
 			
-<!-- Now, populate the table -->
+<!-- populate the table -->
 <?php
 	$charId = $_GET['cId'];
 	
-	// prepare statement to get the contents of 'player'
+	// prepare statement to get the contents of 'pCharSkill'
 	$stmt = $mysqli->prepare("SELECT s.id, s.skillName 
 								FROM skill s INNER JOIN pCharSkill ps ON s.id = ps.skillId
 								WHERE ps.pCharId = ?;");
@@ -62,4 +51,38 @@
 	</div>
 	<br />
 
+<!-- form to add a skill -->
+	<div id=addSkill">
+		<form method="post" action="assignSkill.php">
+			<fieldset>
+				<legend>Assign a new skill</legend>
+				<p>
+					Skill
+					<select name="skill">
 
+<?php
+	// get a list of skills
+	$stmt = $mysqli->prepare("SELECT id, skillName FROM skill;");
+	if(!$stmt) {
+		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
+	}
+	// execute the statement
+	if(!$stmt->execute()){
+		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
+	}
+	// bind the results to variables and display the results
+	if(!$stmt->bind_result($skillId, $skillName)){
+		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
+	}
+	while($stmt->fetch()){
+	 echo "<option value=\"" . $skillId . "\">" . $skillId . ": " . $skillName . "</option>";
+	}
+	$stmt->close();
+?>
+
+					</select>
+				</p>			
+				<p><input type="submit" name="Assign Skill" value="Assign Skill"></p>
+			</fieldset>
+		</form>
+	</div>
