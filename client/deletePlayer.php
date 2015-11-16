@@ -1,12 +1,5 @@
 <?php
-	// turn error reporting on
-	ini_set('display_errors', 'On');
-	// create a new mysqli object that connects to the database
-	$mysqli = new mysqli("oniddb.cws.oregonstate.edu", "meynm-db", "oyZsMNtA2qoISt1u", "meynm-db");
-	// if there's an error, report it:
-	if($mysqli->connect_errno) {
-		echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
+require("config.php");
 
 // get the info from the post
 $player = $_POST['playerToChange'];

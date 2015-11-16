@@ -1,14 +1,10 @@
-<?php
+<?php require("config.php");
 
-require("config.php");
-
-// get the info from the post
-$un = $_POST['userName'];
-$em = $_POST['email'];
+$skillId = $_POST['skill'];
 
 // prepare the query and bind the variables
-$stmt = $mysqli->prepare("INSERT INTO player (userName, email) VALUES (?, ?);");
-$stmt->bind_param('ss', $un, $em);
+$stmt = $mysqli->prepare("INSERT INTO pCharSkill (pCharId, skillId) VALUES (1, ?);");
+$stmt->bind_param('i', $skillId);
 
 // execute and report the result
 $status = $stmt->execute();
@@ -20,6 +16,7 @@ if($status) {
 	
 $stmt->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +26,7 @@ $stmt->close();
 </head>
 
 <body>
-	<form method="GET" action="players.php">
-		<input type="submit" value="Return to Player Table"/>
+	<form method="GET" action="playerCharacters.php">
+		<input type="submit" value="Return to Characters Table"/>
 	</form>
 </body>
