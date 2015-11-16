@@ -27,6 +27,7 @@ require("config.php");
 				<th>Level</th>
 				<th>Health</th>
 				<th>Strength</th>
+				<th>Skills</th>
 			</tr>
 			
 <!-- Now, populate the table -->
@@ -59,7 +60,9 @@ require("config.php");
 			$cClass . "</td>\n<td>" . 
 			$cLevel . "</td>\n<td>" . 
 			$cHealth . "</td>\n<td>" . 
-			$cStrength . "\n</td>\n</tr>";
+			$cStrength . "</td>\n<td>" .
+			"<a href=\"skills.php?cId=" . $cId . "&cName=" . $cName . "\">See Skills</a>" .
+			"</td></tr>";
 	}
 	$stmt->close();
 ?>
