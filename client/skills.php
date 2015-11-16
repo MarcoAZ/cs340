@@ -25,6 +25,7 @@ checkSession();
 <!-- populate the table -->
 <?php
 	$charId = $_GET['cId'];
+	$_SESSION['cId'] = $charId;
 	
 	// prepare statement to get the contents of 'pCharSkill'
 	$stmt = $mysqli->prepare("SELECT s.id, s.skillName 
