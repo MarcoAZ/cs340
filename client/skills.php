@@ -62,10 +62,14 @@
 
 <?php
 	// get a list of skills
-	$stmt = $mysqli->prepare("SELECT id, skillName FROM skill;");
+	$stmt = $mysqli->prepare("SELECT s.id, s.skillName FROM skill s
+								WHERE s.id NOT IN (
+									SELECT skillId FROM pCharSkill
+									WHERE pCharId = ?);");
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
+	$stmt->bind_param('i', $charId);
 	// execute the statement
 	if(!$stmt->execute()){
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
@@ -86,3 +90,5 @@
 			</fieldset>
 		</form>
 	</div>
+</body>
+</html>
