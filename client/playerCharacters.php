@@ -1,5 +1,6 @@
 <?php
 require("config.php");
+checkSession();
 ?>
 
 <!DOCTYPE html>

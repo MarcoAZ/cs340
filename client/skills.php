@@ -1,4 +1,6 @@
-<?php require("config.php"); ?>
+<?php require("config.php"); 
+checkSession();
+?>
 
 <!DOCTYPE html>
 <html>
