@@ -2,12 +2,9 @@
 require("config.php");
 
 // get the info from the post
-$creator = $_POST['creator'];
+$creator = $_SESSION['id'];
 $class = $_POST['classRef'];
 $name = $_POST['name'];
-// $level = $_POST['level'];
-// $health = $_POST['health'];
-// $strength = $_POST['strength'];
 
 echo "creator = " . $creator . "\nclassRef = ". $class;
 
