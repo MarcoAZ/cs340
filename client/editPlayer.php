@@ -3,7 +3,7 @@
 require("config.php");
 
 // get the info from the post
-$player = $_POST['playerToChange'];
+$player = $_SESSION['id'];
 $email = $_POST['email'];
 
 // prepare the query and bind the variables

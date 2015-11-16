@@ -1,5 +1,6 @@
 <?php
 require("config.php");
+checkSession();
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +12,8 @@ require("config.php");
 </head>
 
 <body>
-
+	<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
+	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 <!-- table of players -->
 	<div id="playersTable">
 		<table>
@@ -64,53 +66,7 @@ require("config.php");
 		<form method="post" action="deletePlayer.php">
 			<fieldset>
 				<legend>Delete Player</legend>
-				<p>
-					Player ID
-					<select name="playerToChange">
-					<!--
-<?php
-	// get a list of player ID numbers
-	$stmt = $mysqli->prepare("SELECT id FROM player ORDER BY id;");
-	if(!$stmt) {
-		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
-	}
-	// execute the statement
-	if(!$stmt->execute()){
-		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	// bind the results to variables and display the results
-	if(!$stmt->bind_result($playerId)){
-		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	while($stmt->fetch()){
-	 echo "<option value=\"" . $playerId . "\">" . $playerId . "</option>";
-	}
-	$stmt->close();
-?>
--->
-
-<?php
-	// get a list of player ID numbers
-	$stmt = $mysqli->prepare("SELECT id, userName FROM player ORDER BY id;");
-	if(!$stmt) {
-		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
-	}
-	// execute the statement
-	if(!$stmt->execute()){
-		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	// bind the results to variables and display the results
-	if(!$stmt->bind_result($playerId, $playerName)){
-		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	while($stmt->fetch()){
-	 echo "<option value=\"" . $playerId . "\">" . $playerId . ": " . $playerName . "</option>";
-	}
-	$stmt->close();
-?>
-
-					</select>
-				</p>			
+				<p>	Player: <?php echo $_SESSION["userName"] ?> </p>			
 				<p><input type="submit" name="delete" value="Delete Player"></p>
 			</fieldset>
 		</form>
@@ -121,31 +77,8 @@ require("config.php");
 		<form method="post" action="editPlayer.php">
 			<fieldset>
 				<legend>Change Player Info</legend>
-				<p>
-					Player ID
-					<select name="playerToChange">
-<?php
-	// get a list of player ID numbers
-	$stmt = $mysqli->prepare("SELECT id, userName FROM player ORDER BY id;");
-	if(!$stmt) {
-		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
-	}
-	// execute the statement
-	if(!$stmt->execute()){
-		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	// bind the results to variables and display the results
-	if(!$stmt->bind_result($playerId, $playerName)){
-		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	while($stmt->fetch()){
-	 echo "<option value=\"" . $playerId . "\">" . $playerId . ": " . $playerName . "</option>";
-	}
-	$stmt->close();
-?>
-					</select>
-				</p>
-				<p><input type="text" name="email" required /></p>
+				<p>	Player: <?php echo $_SESSION["userName"] ?> </p>
+				<p>New email address: <input type="text" name="email" required /></p>
 				<p><input type="submit" name="changeEmail" value="Change E-mail Address"></p>
 			</fieldset>
 		</form>

@@ -11,6 +11,8 @@ require("config.php");
 </head>
 
 <body>
+<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
+<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
 <!-- table of characters -->
 	<div id="playersTable">
@@ -68,7 +70,7 @@ require("config.php");
 	<div id="addCharacterForm">
 		<form method="post" action="addCharacter.php">
 			<fieldset>
-				<legend>Add New Character</legend>
+				<legend>Add New Character for <?php echo $_SESSION["userName"] ?> </legend>
 				<p>
 					<select name="classRef">
 
@@ -95,31 +97,6 @@ require("config.php");
 					</select>
 				</p>
 				
-				<p>
-					<select name="creator">
-
-<?php
-	// get a list of players
-	$stmt = $mysqli->prepare("SELECT id, userName FROM player ORDER BY id;");
-	if(!$stmt) {
-		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
-	}
-	// execute the statement
-	if(!$stmt->execute()){
-		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	// bind the results to variables and display the results
-	if(!$stmt->bind_result($playerId, $playerName)){
-		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
-	}
-	while($stmt->fetch()){
-	 echo "<option value=\"" . $playerId . "\">" . $playerId . ": " . $playerName . "</option>";
-	}
-	$stmt->close();
-?>
-					</select>
-				</p>
-
 				<p>Character Name: <input type="text" name="name" required/></p>
 <!--				
 				<p>Level: <input type="text" name="level" required/></p>
