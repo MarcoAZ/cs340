@@ -25,7 +25,7 @@ checkSession();
 <!-- populate the table -->
 <?php
 	$charId = $_GET['cId'];
-	$_SESSION['cId'] = $charId;
+	// $_SESSION['cId'] = $charId;
 	
 	// prepare statement to get the contents of 'pCharSkill'
 	$stmt = $mysqli->prepare("SELECT s.id, s.skillName 
@@ -58,6 +58,11 @@ checkSession();
 <!-- form to add a skill -->
 	<div id=addSkill">
 		<form method="post" action="assignSkill.php">
+		
+<?php
+// add the character ID to the form
+echo "<input type=\"hidden\" name=\"cId\" value=" . $_GET['cId'] . "\"/>";
+?>
 			<fieldset>
 				<legend>Assign a new skill</legend>
 				<p>
@@ -66,10 +71,13 @@ checkSession();
 
 <?php
 	// get a list of skills
-	$stmt = $mysqli->prepare("SELECT s.id, s.skillName FROM skill s
-								WHERE s.id NOT IN (
-									SELECT skillId FROM pCharSkill
-									WHERE pCharId = ?);");
+	$stmt = $mysqli->prepare(
+		"SELECT s.id, s.skillName FROM skill s
+		WHERE s.id NOT IN (
+			SELECT skillId FROM pCharSkill
+			WHERE pCharId = ?
+		);"
+	);
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}

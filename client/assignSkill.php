@@ -1,7 +1,7 @@
 <?php require("config.php");
 checkSession();
 
-$charId = $_SESSION['cId'];
+$charId = $_POST['cId'];
 $skillId = $_POST['skill'];
 
 // prepare the query and bind the variables
