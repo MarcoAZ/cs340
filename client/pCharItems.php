@@ -29,7 +29,7 @@ checkSession();
 	$charId = $_GET['cId'];
 	$charName = $_GET['cName'];
 	
-	// prepare statement to get the contents of 'pCharItem'
+	// prepare statement to get a list of items the player character has
 	$stmt = $mysqli->prepare(
 		"SELECT ii.id, ic.itemName 
 		FROM itemInstance ii 
