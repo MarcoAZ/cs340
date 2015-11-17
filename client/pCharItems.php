@@ -13,28 +13,34 @@ checkSession();
 <body>
 	<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
+	
 <!-- table of skills -->
-	<div id="skillsTable">
+	<div id="itemsTable">
 		<table>
-			<caption><?php echo $_GET['cName'] . "'s Skills"; ?></caption>
+			<caption><?php echo $_GET['cName'] . "'s Items"; ?></caption>
 			<tr>
-				<td>Skill ID</td>
-				<td>Skill Name</td>
+				<th>Item Instance ID</th>
+				<th>Item Class Name</th>
+				<th>Available Actions</th>
 			</tr>
 			
 <!-- populate the table -->
 <?php
 	$charId = $_GET['cId'];
-	// $_SESSION['cId'] = $charId;
+	$charName = $_GET['cName'];
 	
-	// prepare statement to get the contents of 'pCharSkill'
-	$stmt = $mysqli->prepare("SELECT s.id, s.skillName 
-								FROM skill s INNER JOIN pCharSkill ps ON s.id = ps.skillId
-								WHERE ps.pCharId = ?;");
+	// prepare statement to get the contents of 'pCharItem'
+	$stmt = $mysqli->prepare(
+		"SELECT ii.id, ic.itemName 
+		FROM itemInstance ii 
+		INNER JOIN itemClass ic ON ii.classId = ic.id
+		INNER JOIN playerCharacter pc ON ii.owner = pc.id
+		WHERE pc.id = ?;"
+	);
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
-	$stmt->bind_param("i", $charId);	
+	$stmt->bind_param("i", $charId);
 	if(!$stmt) {
 		echo "bind_param failed: "  . $stmt->errno . " " . $stmt->error;
 	}
@@ -43,10 +49,13 @@ checkSession();
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	// bind the results to variables and display the results
-	if(!$stmt->bind_result($skillId, $skillName)){
+	if(!$stmt->bind_result($itemId, $itemName)) {
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
-	while($stmt->fetch()){echo "<tr><td>" . $skillId . "\n</td>\n<td>\n" . $skillName . "\n</td>\n</tr>";
+	while($stmt->fetch()) {
+		echo "<tr><td>" . $itemId . "\n</td>\n<td>\n" . $itemName . "\n</td>\n" .
+		"<td><a href=\"destroyItem.php?iId=" . $itemId . "&cId=" . $charId . "&cName=" . 
+		$charName . "\">Remove Item</a></td></tr>";
 	}
 	$stmt->close();
 ?>
@@ -55,58 +64,49 @@ checkSession();
 	</div>
 	<br />
 
-<!-- form to add a skill -->
-	<div id=addSkill">
-		<form method="post" action="assignSkill.php">
+<!-- form to add an item -->
+	<div id=addItem">
+		<form method="post" action="instantiateItem.php">
 		
 <?php
-// add the character ID and Name to the form
+// add the character ID to the form
 echo "<input type=\"hidden\" name=\"cId\" value=" . $_GET['cId'] . "\"/>";
 echo "<input type=\"hidden\" name=\"cName\" value=" . $_GET['cName'] . "\"/>";
 ?>
 			<fieldset>
-				<legend>Assign a new skill</legend>
+				<legend>Give a new item to <?php echo $_GET['cName'];?></legend>
 				<p>
-					Skill
-					<select name="skill">
+					Item
+					<select name="item">
 
-<?php
-	// get a list of skills
+<?php 
+	// get a list of items
 	$stmt = $mysqli->prepare(
-		"SELECT s.id, s.skillName FROM skill s
-		WHERE s.id NOT IN (
-			SELECT skillId FROM pCharSkill
-			WHERE pCharId = ?
-		);"
+		"SELECT itemName, id FROM itemClass;"
 	);
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
-	$stmt->bind_param('i', $charId);
 	// execute the statement
 	if(!$stmt->execute()){
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	// bind the results to variables and display the results
-	if(!$stmt->bind_result($skillId, $skillName)){
+	if(!$stmt->bind_result($itemName, $iClassId)){
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
-	$numRows = 0;
 	while($stmt->fetch()){
-		$numRows++;
-		echo "<option value=\"" . $skillId . "\">" . $skillId . ": " . $skillName . "</option>";
-	}
-	if(!$numRows) {
-		echo "<option value=\"\">No more skills left to learn!</option>";
+	 echo "<option value=\"" . $iClassId . "\">" . $iClassId . ": " . $itemName . "</option>";
 	}
 	$stmt->close();
 ?>
 
 					</select>
 				</p>			
-				<p><input type="submit" name="Assign Skill" value="Assign Skill"></p>
+				<p><input type="submit" name="giveItem" value="Give Item"></p>
 			</fieldset>
 		</form>
 	</div>
+
 </body>
 </html>

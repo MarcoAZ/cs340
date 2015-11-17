@@ -20,7 +20,6 @@ checkSession();
 		<table>
 			<caption>Characters</caption>
 			<tr>
-
 				<th>Character ID</th>
 				<th>Name</th>
 				<th>Belongs to Player</th>				
@@ -29,6 +28,7 @@ checkSession();
 				<th>Health</th>
 				<th>Strength</th>
 				<th>Skills</th>
+				<th>Items</th>
 			</tr>
 			
 <!-- Now, populate the table -->
@@ -62,8 +62,11 @@ checkSession();
 			$cLevel . "</td>\n<td>" . 
 			$cHealth . "</td>\n<td>" . 
 			$cStrength . "</td>\n<td>" .
-			"<a href=\"skills.php?cId=" . $cId . "&cName=" . $cName . "\">See Skills</a>" .
-			"</td></tr>";
+			"<a href=\"skills.php?cId=" . $cId . "&cName=" . $cName . 
+			"\">See Skills</a>" . "</td>\n<td>" .
+			"<a href=\"pCharItems.php?cId=" . $cId . "&cName=" . $cName . 
+			"\">See Items</a>" . "</td>\n" .	
+			"</tr>";
 	}
 	$stmt->close();
 ?>
