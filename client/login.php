@@ -35,7 +35,7 @@ require("config.php");
 		}
 		else
 		{
-			redirect("welcome.php?fail=true");
+			redirect("welcome.php?login=false");
 		}
 
 }
