@@ -49,18 +49,6 @@ checkSession();
 		</table>		
 	</div>
 	<br />
-
-<!-- a form to add new players -->	
-	<div id="userInfoForm">
-		<form method="post" action="addPlayer.php">
-			<fieldset>
-				<legend>Add New Player</legend>
-				<p>User Name: <input type="text" name="userName" required/></p>
-				<p>E-mail Address: <input type="text" name="email" required/></p>
-				<p><input type="submit" name="addNew" value="Add Player" /></p>
-			</fieldset>
-		</form>
-	</div>
 	
 <!-- a form to delete player info -->
 	<div id=deleteUserForm">
