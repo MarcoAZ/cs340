@@ -1,10 +1,12 @@
 <?php require("config.php");
+checkSession();
 
+$charId = $_SESSION['cId'];
 $skillId = $_POST['skill'];
 
 // prepare the query and bind the variables
-$stmt = $mysqli->prepare("INSERT INTO pCharSkill (pCharId, skillId) VALUES (1, ?);");
-$stmt->bind_param('i', $skillId);
+$stmt = $mysqli->prepare("INSERT INTO pCharSkill (pCharId, skillId) VALUES (?, ?);");
+$stmt->bind_param('ii', $charId, $skillId);
 
 // execute and report the result
 $status = $stmt->execute();
