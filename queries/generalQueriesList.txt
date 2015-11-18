@@ -272,6 +272,38 @@ SELECT ii.id, ic.itemName
 		INNER JOIN itemClass ic ON ii.classId = ic.id
 		INNER JOIN playerCharacter pc ON ii.owner = pc.id
 		WHERE pc.id = ?;
+		
+-- get information on one character (skills, items, stats)
+SELECT p.userName,
+	pc.characterName, 
+	cClass.className,
+	pc.level, 
+	pc.health, 
+	pc.strength, 
+	cSkl.skillCount, 
+	cItm.itemCount
+from player p
+inner join playerCharacter pc on p.id = pc.playerId
+inner join characterClass cClass on cClass.id = pc.classId
+left join(
+	SELECT pc.id, count(pc.characterName) skillCount
+	FROM playerCharacter pc,
+		pCharSkill pcs,
+		skill s
+	WHERE pcs.pCharId = pc.id
+	and s.id = pcs.skillId
+	GROUP BY pc.id
+) cSkl on p.id = cSkl.id
+left join(
+	SELECT pc.id, count(pc.characterName) itemCount
+	FROM playerCharacter pc,
+		itemInstance itmI,
+		itemClass itmC
+	WHERE pc.id= itmI.owner
+	and itmC.id = itmI.classID
+	GROUP BY pc.id
+) cItm on cItm.id = p.id
+WHERE pc.id = [SelectCharacterID]
 
 	
 	

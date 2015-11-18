@@ -56,7 +56,7 @@ checkSession();
 	while($stmt->fetch()){
 		echo "<tr>\n<td>\n" . 
 			$cId . "</td>\n<td>" . 
-			$cName . "</td>\n<td>" . 
+			"<a href=\"viewCharacter.php?cId=" . $cId . "&cName=" . $cName ."\">" . $cName . "</a></td>\n<td>" . 
 			$cOwner . "</td>\n<td>" . 
 			$cClass . "</td>\n<td>" . 
 			$cLevel . "</td>\n<td>" . 
