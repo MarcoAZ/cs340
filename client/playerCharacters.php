@@ -23,7 +23,7 @@ checkSession();
 				<th>Character ID</th>
 				<th>Name</th>
 				<th>Belongs to Player</th>				
-				<th>Class</th>
+				<th><a href="cClasses.php">Class</a></th>
 				<th>Level</th>
 				<th>Health</th>
 				<th>Strength</th>

@@ -62,6 +62,6 @@ $stmt->close();
 
 <body>
 	<form method="GET" action="players.php">
-		<input type="submit" value="Return to Player Table"/>
+		<input type="submit" value="Go to Player Table"/>
 	</form>
 </body>
