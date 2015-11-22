@@ -20,7 +20,7 @@ checkSession();
 			<caption><?php echo $_GET['cName'] . "'s Items"; ?></caption>
 			<tr>
 				<th>Item Instance ID</th>
-				<th>Item Class Name</th>
+				<th><a href="itemClasses.php">Item Class Name</a></th>
 				<th>Available Actions</th>
 			</tr>
 			
