@@ -47,19 +47,16 @@ checkSession();
 		FROM playerCharacter pc
 			left join pCharSkill pcs on pc.id=pcs.pCharId
 			left join skill s on s.id = pcs.skillId
-		-- WHERE pcs.pCharId = pc.id
-		-- and s.id = pcs.skillId
 		GROUP BY pc.id
 	) cSkl on pc.id = cSkl.id
 	left join(
-		SELECT pc.id, count(pc.characterName) itemCount
-		FROM playerCharacter pc,
-			itemInstance itmI,
-			itemClass itmC
-		WHERE pc.id= itmI.owner
-		and itmC.id = itmI.classID
+		SELECT pc.id, count(itmI.id) itemCount
+		FROM playerCharacter pc
+			left join itemInstance itmI on pc.id = itmI.owner
+			left join itemClass itmC on itmI.classId = itmC.id
+		
 		GROUP BY pc.id
-	) cItm on cItm.id = p.id
+	) cItm on cItm.id = pc.id
 	WHERE p.id = ?");
 	
 	if(!$stmt) {
