@@ -16,7 +16,7 @@ checkSession();
 
 <!-- character details table -->
 	<table>
-		<caption> <?php echo $_GET['cName'] ?></caption>
+		<caption> <?php echo $_GET['pName'] . "'s Characters";?></caption>
 		<tr>
 			<th>Character Name</th>
 			<th>Belongs to Player</th>
@@ -29,9 +29,9 @@ checkSession();
 		</tr>
 
 <?php
-/* Get character details with a query and show to user  */
+// Get character details with a query and show to user  
 	$stmt = $mysqli->prepare("
-	SELECT p.userName,
+	SELECT pc.id, p.userName,
 		pc.characterName, 
 		cClass.className,
 		pc.level, 
@@ -43,29 +43,26 @@ checkSession();
 	inner join playerCharacter pc on p.id = pc.playerId
 	inner join characterClass cClass on cClass.id = pc.classId
 	left join(
-		SELECT pc.id, count(pc.characterName) skillCount
-		FROM playerCharacter pc,
-			pCharSkill pcs,
-			skill s
-		WHERE pcs.pCharId = pc.id
-		and s.id = pcs.skillId
+		SELECT pc.id, count(pcs.skillId) skillCount
+		FROM playerCharacter pc
+			left join pCharSkill pcs on pc.id=pcs.pCharId
+			left join skill s on s.id = pcs.skillId
 		GROUP BY pc.id
-	) cSkl on p.id = cSkl.id
+	) cSkl on pc.id = cSkl.id
 	left join(
-		SELECT pc.id, count(pc.characterName) itemCount
-		FROM playerCharacter pc,
-			itemInstance itmI,
-			itemClass itmC
-		WHERE pc.id= itmI.owner
-		and itmC.id = itmI.classID
+		SELECT pc.id, count(itmI.id) itemCount
+		FROM playerCharacter pc
+			left join itemInstance itmI on pc.id = itmI.owner
+			left join itemClass itmC on itmI.classId = itmC.id
+		
 		GROUP BY pc.id
-	) cItm on cItm.id = p.id
-	WHERE pc.id = ?");
+	) cItm on cItm.id = pc.id
+	WHERE p.id = ?");
 	
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
-	if(!$stmt->bind_param('i', $_GET['cId']))
+	if(!$stmt->bind_param('i', $_GET['pId']))
 	{
 		echo "Bind param failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
@@ -73,13 +70,13 @@ checkSession();
 	if(!$stmt->execute()) {
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
-	$stmt->bind_result($player, $cName, $cClass, $level, $Health, $Strength, $skillCount, $itemCount);
+	$stmt->bind_result($charId, $player, $cName, $cClass, $level, $Health, $Strength, $skillCount, $itemCount);
 	if(!($stmt)) {
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	
 	//display all this info
-	if($stmt->fetch())
+	while($stmt->fetch())
 	{
 		echo "<tr>" . 
 		"<td>" . $cName . "</td>" .
@@ -88,7 +85,7 @@ checkSession();
 		"<td>" . 	$level . "</td>" .
 		"<td>" . 	$Health . "</td>" .
 		"<td>" . 	$Strength . "</td>" .
-		"<td>" . 	$skillCount . "</td>" .
+		"<td><a href=\"skills.php?cId=" . $charId . "&cName=" . $player . "\">" . $skillCount . "</a></td>" .
 		"<td>" . 	$itemCount . "</td>" .
 		"</tr>";
 	}

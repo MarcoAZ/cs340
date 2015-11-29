@@ -41,7 +41,9 @@ checkSession();
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	while($stmt->fetch()){
-	 echo "<tr>\n<td>\n" . $playerId . "\n</td>\n<td>\n" . $username . "\n</td>\n<td>\n" . $playerEmail . "\n</td>\n</tr>";
+	 echo "<tr>\n<td>\n" . $playerId . "\n</td>\n<td>\n<a href=\"viewPlayer.php?pId=" . 
+	 	$playerId . "&pName=" . $username . "\">" . $username . "</a>\n</td>\n<td>\n" . 
+	 	$playerEmail . "\n</td>\n</tr>";
 	}
 	$stmt->close();
 ?>

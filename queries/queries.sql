@@ -20,7 +20,7 @@ CREATE TABLE `characterClass` (
 	`className` varchar(255) NOT NULL,
 	`startLevel` tinyint UNSIGNED DEFAULT 1,
 	`startHealth` smallint UNSIGNED DEFAULT 100,
-	`startStrength` smallint UNSIGNED NOT NULL,
+	`startStrength` smallint UNSIGNED DEFAULT 30,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`className`)
 ) ENGINE=InnoDB;
