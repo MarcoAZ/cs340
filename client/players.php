@@ -41,7 +41,9 @@ checkSession();
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	while($stmt->fetch()){
-	 echo "<tr>\n<td>\n" . $playerId . "\n</td>\n<td>\n" . $username . "\n</td>\n<td>\n" . $playerEmail . "\n</td>\n</tr>";
+	 echo "<tr>\n<td>\n" . $playerId . "\n</td>\n<td>\n<a href=\"viewPlayer.php?pId=" . 
+	 	$playerId . "&pName=" . $username . "\">" . $username . "</a>\n</td>\n<td>\n" . 
+	 	$playerEmail . "\n</td>\n</tr>";
 	}
 	$stmt->close();
 ?>
@@ -49,18 +51,6 @@ checkSession();
 		</table>		
 	</div>
 	<br />
-
-<!-- a form to add new players -->	
-	<div id="userInfoForm">
-		<form method="post" action="addPlayer.php">
-			<fieldset>
-				<legend>Add New Player</legend>
-				<p>User Name: <input type="text" name="userName" required/></p>
-				<p>E-mail Address: <input type="text" name="email" required/></p>
-				<p><input type="submit" name="addNew" value="Add Player" /></p>
-			</fieldset>
-		</form>
-	</div>
 	
 <!-- a form to delete player info -->
 	<div id=deleteUserForm">

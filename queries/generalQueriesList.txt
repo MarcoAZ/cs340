@@ -1,3 +1,5 @@
+-- list of queries
+
 DROP TABLE IF EXISTS itemInstance;
 DROP TABLE IF EXISTS pCharSkill;
 DROP TABLE IF EXISTS playerCharacter;
@@ -20,7 +22,7 @@ CREATE TABLE `characterClass` (
 	`className` varchar(255) NOT NULL,
 	`startLevel` tinyint UNSIGNED DEFAULT 1,
 	`startHealth` smallint UNSIGNED DEFAULT 100,
-	`startStrength` smallint UNSIGNED DEFAULT 30,
+	`startStrength` smallint UNSIGNED NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY (`className`)
 ) ENGINE=InnoDB;
@@ -176,6 +178,147 @@ values ("Glimbloy",
 	(SELECT id FROM characterClass WHERE className = "archer")
 );
 
+-- pCharSkill insert queries
+
+INSERT INTO pCharSkill (pCharId, skillId)
+values (
+	(SELECT pc.id FROM playerCharacter pc WHERE pc.characterName = "Drognestia"),
+	(SELECT s.id FROM skill s WHERE s.skillName = "FireMagic")
+);
+
+INSERT INTO pCharSkill (pCharId, skillId)
+values (
+	(SELECT pc.id FROM playerCharacter pc WHERE pc.characterName = "Glimbloy"),
+	(SELECT s.id FROM skill s WHERE s.skillName = "ArmorRepair")
+);
+
+-- itemInstance insert queries
+
+INSERT INTO itemInstance (classId, owner)
+values (
+	(SELECT id FROM itemClass WHERE itemName = "SteelShortSword"),
+	(SELECT id FROM playerCharacter WHERE characterName = "Drognestia")
+);
+
+INSERT INTO itemInstance (classId, owner)
+values (
+	(SELECT id FROM itemClass WHERE itemName = "WornBow"),
+	(SELECT id FROM playerCharacter WHERE characterName = "Rognar")
+);
+
+INSERT INTO itemInstance (classId, owner)
+values (
+	(SELECT id FROM itemClass WHERE itemName = "LeatherShield"),
+	(SELECT id FROM playerCharacter WHERE characterName = "Glimbloy")
+);
+
+
+
+-- general use queries
+
+-- get the contents of 'player'
+
+SELECT id, userName, email FROM player;
+
+-- create a new player
+
+INSERT INTO player (userName, email) VALUES (?, ?);
+
+-- create a new item instance to give to a character
+
+INSERT INTO itemInstance (classId, owner) VALUES (?, ?);
+
+-- query database for user id of specified user
+
+SELECT id FROM player WHERE userName = ?;
+
+-- get the contents of 'playerCharacter'
+
+SELECT pc.id, characterName, p.userName, cc.className, level, health, strength
+	FROM playerCharacter pc INNER JOIN player p ON pc.playerId = p.id
+	INNER JOIN characterClass cc ON pc.classId = cc.id
+	ORDER BY p.userName;
+
+-- create a new player character
+
+INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId) 
+	VALUES (?,
+	(SELECT startLevel FROM characterClass WHERE id = ?), 
+	(SELECT startHealth FROM characterClass WHERE id = ?),
+	(SELECT startStrength FROM characterClass WHERE id = ?),
+	?, ?);");
+
+-- get a list of character classes
+
+SELECT id, className FROM characterClass ORDER BY id;
+
+-- get all the skills a particular character has
+
+SELECT s.id, s.skillName 
+FROM skill s INNER JOIN pCharSkill ps ON s.id = ps.skillId
+WHERE ps.pCharId = ?;
+
+-- get a list of skills the character does not have
+
+SELECT s.id, s.skillName FROM skill s 
+WHERE s.id NOT IN (
+	SELECT skillId FROM pCharSkill
+	WHERE pCharId = ?);
+
+-- get a table of items possessed by a character
+
+SELECT ii.id, ic.itemName 
+		FROM itemInstance ii 
+		INNER JOIN itemClass ic ON ii.classId = ic.id
+		INNER JOIN playerCharacter pc ON ii.owner = pc.id
+		WHERE pc.id = ?;
+		
+-- get information on one character (skills, items, stats)
+SELECT p.userName,
+	pc.characterName, 
+	cClass.className,
+	pc.level, 
+	pc.health, 
+	pc.strength, 
+	cSkl.skillCount, 
+	cItm.itemCount
+from player p
+inner join playerCharacter pc on p.id = pc.playerId
+inner join characterClass cClass on cClass.id = pc.classId
+left join(
+	SELECT pc.id, count(pc.characterName) skillCount
+	FROM playerCharacter pc,
+		pCharSkill pcs,
+		skill s
+	WHERE pcs.pCharId = pc.id
+	and s.id = pcs.skillId
+	GROUP BY pc.id
+) cSkl on p.id = cSkl.id
+left join(
+	SELECT pc.id, count(pc.characterName) itemCount
+	FROM playerCharacter pc,
+		itemInstance itmI,
+		itemClass itmC
+	WHERE pc.id= itmI.owner
+	and itmC.id = itmI.classID
+	GROUP BY pc.id
+) cItm on cItm.id = p.id
+WHERE pc.id = [SelectCharacterID]
+
+	
+	
+-- UPDATE, DELETE, etc.
+-- change player's email address
+
+UPDATE player SET email = ? WHERE id = ?;
+
+-- delete player row
+
+DELETE FROM player WHERE id = ?;
+
+-- destroy item instance
+
+DELETE FROM itemInstance WHERE id = ?;
 
 
 

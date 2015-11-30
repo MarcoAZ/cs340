@@ -1,7 +1,8 @@
 <?php require("config.php");
 checkSession();
 
-$charId = $_SESSION['cId'];
+$charId = $_POST['cId'];
+$charName = $_POST['cName'];
 $skillId = $_POST['skill'];
 
 // prepare the query and bind the variables
@@ -30,5 +31,13 @@ $stmt->close();
 <body>
 	<form method="GET" action="playerCharacters.php">
 		<input type="submit" value="Return to Characters Table"/>
+	</form>
+	<form method="GET" action="skills.php">
+	
+<?php
+	echo "<input type=\"hidden\" name=\"cId\" value=\"" . $charId . "\" />";
+	echo "<input type=\"hidden\" name=\"cName\" value=\"" . $charName . "\" />";
+	echo "<input type=\"submit\" value=\"Return to Skills Table\">"; 
+?>
 	</form>
 </body>
