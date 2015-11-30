@@ -31,7 +31,9 @@ checkSession();
 <?php
 /* Get character details with a query and show to user  */
 	$stmt = $mysqli->prepare("
-	SELECT p.userName,
+	SELECT p.id,
+		pc.id, 
+		p.userName,
 		pc.characterName, 
 		cClass.className,
 		pc.level, 
@@ -57,38 +59,53 @@ checkSession();
 		
 		GROUP BY pc.id
 	) cItm on cItm.id = pc.id
-	WHERE pc.id = ?");
+	WHERE pc.id = ?
+	");
 	
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
-	if(!$stmt->bind_param('i', $_GET['cId']))
-	{
+	if(!$stmt->bind_param('i', $_GET['cId'])) {
 		echo "Bind param failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	
 	if(!$stmt->execute()) {
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
-	$stmt->bind_result($player, $cName, $cClass, $level, $Health, $Strength, $skillCount, $itemCount);
+	$stmt->bind_result(
+			$pId, 
+			$charId, 
+			$player, 
+			$cName, 
+			$cClass, 
+			$level, 
+			$Health, 
+			$Strength, 
+			$skillCount, 
+			$itemCount
+	);
 	if(!($stmt)) {
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	
 	//display all this info
-	if($stmt->fetch())
-	{
+	if($stmt->fetch()) {
 		echo "<tr>" . 
 		"<td>" . $cName . "</td>" .
-		"<td>" . $player . "</td>" .
+		"<td><a href=\"viewPlayer.php?pId=" . 
+				$pId . "&pName=" . $player . "\">" .
+				$player . "</a></td>" .
 		"<td>" . $cClass . "</td>" .
-		"<td>" . 	$level . "</td>" .
-		"<td>" . 	$Health . "</td>" .
-		"<td>" . 	$Strength . "</td>" .
-		"<td>" . 	$skillCount . "</td>" .
-		"<td>" . 	$itemCount . "</td>" .
+		"<td>" . $level . "</td>" .
+		"<td>" . $Health . "</td>" .
+		"<td>" . $Strength . "</td>" .
+		"<td><a href=\"skills.php?cId=" . $charId . "&cName=" . $cName . "\">" .
+				$skillCount . "</a></td>" .
+		"<td><a href=\"pCharItems.php?cId=" . $charId . "&cName=" . $cName . "\">" .
+				$itemCount . "</a></td>" .
 		"</tr>";
 	}
+
 	$stmt->close();
 ?>
 	</table>
