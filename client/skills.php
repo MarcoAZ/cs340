@@ -16,7 +16,13 @@ checkSession();
 <!-- table of skills -->
 	<div id="skillsTable">
 		<table>
-			<caption><?php echo $_GET['cName'] . "'s Skills"; ?></caption>
+			<caption>
+<?php 
+	echo "<a href=\"viewCharacter.php?cId=" . $_GET['cId'] . "&cName=" . $_GET['cName'] . "\">" . 
+			$_GET['cName'] . "</a>" . "'s Skills"; 
+?>			
+			
+			</caption>
 			<tr>
 				<td>Skill ID</td>
 				<td>Skill Name</td>

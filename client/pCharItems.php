@@ -17,7 +17,16 @@ checkSession();
 <!-- table of skills -->
 	<div id="itemsTable">
 		<table>
-			<caption><?php echo $_GET['cName'] . "'s Items"; ?></caption>
+
+
+		
+		
+			<caption>
+<?php 
+	echo "<a href=\"viewCharacter.php?cId=" . $_GET['cId'] . "&cName=" . $_GET['cName'] . "\">" . 
+			$_GET['cName'] . "</a>" . "'s Items"; 
+?>			
+			</caption>
 			<tr>
 				<th>Item Instance ID</th>
 				<th><a href="itemClasses.php">Item Class Name</a></th>

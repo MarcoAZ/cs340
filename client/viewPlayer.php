@@ -14,9 +14,10 @@ checkSession();
 	<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
-<!-- character details table -->
+<!-- player details table -->
 	<table>
-		<caption> <?php echo $_GET['pName'] . "'s Characters";?></caption>
+		<caption> <?php echo $_GET['pName'] . "'s Characters"; ?>
+		</caption>
 		<tr>
 			<th>Character Name</th>
 			<th>Belongs to Player</th>
@@ -70,11 +71,20 @@ checkSession();
 	if(!$stmt->execute()) {
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
-	$stmt->bind_result($charId, $player, $cName, $cClass, $level, $Health, $Strength, $skillCount, $itemCount);
+	$stmt->bind_result(
+			$charId, 
+			$player, 
+			$cName, 
+			$cClass,
+			$level, 
+			$Health, 
+			$Strength, 
+			$skillCount, 
+			$itemCount
+	);
 	if(!($stmt)) {
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
-	
 	//display all this info
 	while($stmt->fetch())
 	{
@@ -82,11 +92,13 @@ checkSession();
 		"<td>" . $cName . "</td>" .
 		"<td>" . $player . "</td>" .
 		"<td>" . $cClass . "</td>" .
-		"<td>" . 	$level . "</td>" .
-		"<td>" . 	$Health . "</td>" .
-		"<td>" . 	$Strength . "</td>" .
-		"<td><a href=\"skills.php?cId=" . $charId . "&cName=" . $player . "\">" . $skillCount . "</a></td>" .
-		"<td>" . 	$itemCount . "</td>" .
+		"<td>" . $level . "</td>" .
+		"<td>" . $Health . "</td>" .
+		"<td>" . $Strength . "</td>" .
+		"<td><a href=\"skills.php?cId=" . $charId . "&cName=" . $cName . "\">" . 
+				$skillCount . "</a></td>" .
+		"<td><a href=\"pCharItems.php?cId=" . $charId . "&cName=" . $cName . "\">" .
+				$itemCount . "</a></td>" .
 		"</tr>";
 	}
 	$stmt->close();
