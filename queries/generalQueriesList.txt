@@ -222,15 +222,15 @@ SELECT id, userName, email FROM player;
 
 -- create a new player
 
-INSERT INTO player (userName, email) VALUES (?, ?);
+INSERT INTO player (userName, email) VALUES ([userNameInput], [emailInput]);
 
 -- create a new item instance to give to a character
 
-INSERT INTO itemInstance (classId, owner) VALUES (?, ?);
+INSERT INTO itemInstance (classId, owner) VALUES ([selectedItemId], [currentCharacterName] );
 
 -- query database for user id of specified user
 
-SELECT id FROM player WHERE userName = ?;
+SELECT id FROM player WHERE userName = [selectedUsername];
 
 -- get the contents of 'playerCharacter'
 
@@ -242,11 +242,11 @@ SELECT pc.id, characterName, p.userName, cc.className, level, health, strength
 -- create a new player character
 
 INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId) 
-	VALUES (?,
-	(SELECT startLevel FROM characterClass WHERE id = ?), 
-	(SELECT startHealth FROM characterClass WHERE id = ?),
-	(SELECT startStrength FROM characterClass WHERE id = ?),
-	?, ?);");
+	VALUES ([CharacterNameInput],
+	(SELECT startLevel FROM characterClass WHERE id = [selectedClassId]), 
+	(SELECT startHealth FROM characterClass WHERE id = [selectedClassId]),
+	(SELECT startStrength FROM characterClass WHERE id = [selectedClassId]),
+	[currentPlayerId], [selectedClassId]);");
 
 -- get a list of character classes
 
@@ -263,7 +263,7 @@ WHERE ps.pCharId = ?;
 SELECT s.id, s.skillName FROM skill s 
 WHERE s.id NOT IN (
 	SELECT skillId FROM pCharSkill
-	WHERE pCharId = ?);
+	WHERE pCharId = [selectedCharacterId]);
 
 -- get a table of items possessed by a character
 
@@ -271,7 +271,7 @@ SELECT ii.id, ic.itemName
 		FROM itemInstance ii 
 		INNER JOIN itemClass ic ON ii.classId = ic.id
 		INNER JOIN playerCharacter pc ON ii.owner = pc.id
-		WHERE pc.id = ?;
+		WHERE pc.id = [selectedCharacterId];
 		
 -- get information on one character (skills, items, stats)
 SELECT p.userName,
@@ -300,22 +300,22 @@ left join(
 	
 	GROUP BY pc.id
 ) cItm on cItm.id = pc.id
-WHERE pc.id = [SelectCharacterID]
+WHERE pc.id = [selectedCharacterID]
 
 	
 	
 -- UPDATE, DELETE, etc.
 -- change player's email address
 
-UPDATE player SET email = ? WHERE id = ?;
+UPDATE player SET email = [newEmail] WHERE id = [currentPlayerId];
 
 -- delete player row
 
-DELETE FROM player WHERE id = ?;
+DELETE FROM player WHERE id = [currentPlayerId];
 
 -- destroy item instance
 
-DELETE FROM itemInstance WHERE id = ?;
+DELETE FROM itemInstance WHERE id = [selectedItemId];
 
 
 
