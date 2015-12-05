@@ -12,7 +12,16 @@ checkSession();
 </head>
 
 <body>
-	<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
+	<div id="nav">
+		<fieldset>
+			<a href="players.php">Players</a> | 
+			<a href="playerCharacters.php">Characters</a> |
+			<a href="cClasses.php">Classes</a> |
+			<a href="itemClasses.php">Items</a> |
+			<a href="skillClasses.php">Skills</a>
+		</fieldset>
+	</div>
+
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
 <!-- table of players -->
@@ -73,6 +82,16 @@ checkSession();
 				<p><input type="submit" name="changeEmail" value="Change E-mail Address"></p>
 			</fieldset>
 		</form>
+	</div>
+	
+<!-- link to create a character for this player -->
+	<div id="newCharacter">
+		<fieldset>
+			<legend>Go to Characters Page to Add a Character</legend>
+			<form action="playerCharacters.php" method="GET">
+				<input type="submit" value="Go to Characters"></input>
+			</form>
+		</fieldset>
 	</div>
 
 </body>
