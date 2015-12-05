@@ -11,13 +11,13 @@ checkSession();
 </head>
 
 <body>
-	<p>
+	<fieldset>
 	<a href="players.php">Players</a> | 
 	<a href="playerCharacters.php">Characters</a> |
 	<a href="cClasses.php">Classes</a> |
 	<a href="itemClasses.php">Items</a> |
-	<a href="skillClasses.php">Skills</a> |	
-	</p>
+	<a href="skillClasses.php">Skills</a>
+	</fieldset>
 	
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
@@ -37,7 +37,7 @@ checkSession();
 		</tr>
 
 <?php
-// Get character details with a query and show to user  
+// Get characters that belong to this player and show their details to user  
 	$stmt = $mysqli->prepare("
 	SELECT pc.id, p.userName,
 		pc.characterName, 
@@ -96,7 +96,8 @@ checkSession();
 	while($stmt->fetch())
 	{
 		echo "<tr>" . 
-		"<td>" . $cName . "</td>" .
+		"<td><a href=\"viewCharacter.php?cId=" . $charId . "&cName=". $cName .
+				"\">" . $cName . "</a></td>" .
 		"<td>" . $player . "</td>" .
 		"<td>" . $cClass . "</td>" .
 		"<td>" . $level . "</td>" .
