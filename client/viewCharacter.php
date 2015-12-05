@@ -114,7 +114,28 @@ checkSession();
 				$itemCount . "</a></td>" .
 		"</tr>";
 	}
-
 	$stmt->close();
 ?>
 	</table>
+	
+	<fieldset>
+		<legend>Edit Attributes</legend>
+		<form action="editCharacter.php" method="POST">
+<?php
+	echo "Level: <input type=\"text\" name=\"level\" value=\"" . $level . "\"><br>" .
+			"Health: <input type=\"text\" name=\"health\" value=\"" . $Health . "\"><br>" .
+			"Strength: <input type=\"text\" name=\"strength\" value=\"" . $Strength . "\">" .
+			"<input type=\"hidden\" name=\"id\" value=\"" . $charId . "\"><br><br>" . 
+			"<input type=\"submit\" value=\"Save Changes\">";		
+?>
+		</form>
+	</fieldset>
+	<fieldset>
+	<legend>Skills and Items</legend>
+<?php
+	echo "<a href=\"skills.php?cId=" . $charId . "&cName=" . $cName . "\">Edit Skills</a><br><br>" .
+			"<a href=\"pCharItems.php?cId=" . $charId . "&cName=" . $cName . "\">Edit Items</a>";
+?>
+	</fieldset>
+</body>
+
