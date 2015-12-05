@@ -109,7 +109,7 @@ checkSession();
 		</table>
 	</div>
 	
-<!-- form to add new characters -->	
+<!-- form to add new character for this user -->	
 	<div id="addCharacterForm">
 		<form method="post" action="addCharacter.php">
 			<fieldset>
@@ -119,7 +119,7 @@ checkSession();
 
 <?php
 	// get a list of classes
-	$stmt = $mysqli->prepare("SELECT id, className FROM characterClass ORDER BY id;");
+	$stmt = $mysqli->prepare("SELECT id, className FROM characterClass ORDER BY className;");
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
@@ -132,22 +132,58 @@ checkSession();
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	while($stmt->fetch()){
-	 echo "<option value=\"" . $classId . "\">" . $classId . ":  " .  $className . "</option>";
+//	 echo "<option value=\"" . $classId . "\">" . $classId . ":  " .  $className . "</option>";
+	 echo "<option value=\"" . $classId . "\">" . $className . "</option>";
 	}
 	$stmt->close();
 ?>
 
 					</select>
 				</p>
-				
-				<p>Character Name: <input type="text" name="name" required/></p>
-<!--				
-				<p>Level: <input type="text" name="level" required/></p>
-				<p>Health: <input type="text" name="health" required/></p>		
-				<p>Strength: <input type="text" name="strength" required></p>		
--->				
+				<p>Character Name: <input type="text" name="name" required/></p>			
 				<p><input type="submit" name="addNew" value="Add Character" /></p>
 				
+			</fieldset>
+		</form>
+	</div>
+
+<!-- form to delete a character belonging to this user -->	
+	<div id="deleteCharacterForm">
+		<form action="deleteCharacter.php" method="POST">
+			<fieldset>
+				<legend>Delete Character from <?php echo $_SESSION["userName"] ?> </legend>
+				<select name="charToDelete">
+				
+<?php
+	// get a list of characters belonging to this user
+	$stmt = $mysqli->prepare("
+		SELECT pc.id, pc.characterName FROM playerCharacter pc
+		INNER JOIN player p ON pc.playerId = p.id
+		WHERE p.id = ?;
+	");
+	if(!$stmt) {
+		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
+	}
+	$stmt->bind_param("i", $_SESSION['id']);
+	if(!$stmt) {
+		echo "bind_param failed: "  . $stmt->errno . " " . $stmt->error;
+	}
+	// execute the statement
+	if(!$stmt->execute()){
+		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
+	}
+	// bind the results to variables and display the results
+	if(!$stmt->bind_result($charId, $charName)){
+		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
+	}
+	while($stmt->fetch()){
+	 echo "<option value=\"" . $charId . "\">" . $charName . "</option>";
+	}
+	$stmt->close();
+?>
+				</select>
+				<br><br>
+				<input type="submit" value="Delete Character">
 			</fieldset>
 		</form>
 	</div>

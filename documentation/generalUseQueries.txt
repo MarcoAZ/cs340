@@ -16,6 +16,18 @@ INSERT INTO itemInstance (classId, owner) VALUES ([selectedItemId], [currentChar
 
 INSERT INTO pCharSkill (pCharId, skillId) VALUES ([selectedCharacter], [selectedSkill]);"
 
+-- create a new class of item
+
+INSERT INTO itemClass (itemName) VALUES ([itemToCreate]);
+
+-- create a new skill
+
+INSERT INTO skill (skillName) VALUES ([newSkill]);
+
+-- create a new character class
+
+INSERT INTO characterClass (className) VALUES ([newCClass]);
+
 -- query database for user id of specified user
 
 SELECT id FROM player WHERE userName = [selectedUsername];
@@ -35,6 +47,12 @@ INSERT INTO playerCharacter (characterName, level, health, strength, playerId, c
 	(SELECT startHealth FROM characterClass WHERE id = [selectedClassId]),
 	(SELECT startStrength FROM characterClass WHERE id = [selectedClassId]),
 	[currentPlayerId], [selectedClassId]);");
+
+-- get a list of characters belonging to this user
+
+SELECT pc.id, pc.characterName FROM playerCharacter pc
+	INNER JOIN player p ON pc.playerId = p.id
+	WHERE p.id = [currentUser];
 
 -- get a list of character classes
 
@@ -75,7 +93,8 @@ SELECT ii.id, ic.itemName
 		INNER JOIN playerCharacter pc ON ii.owner = pc.id
 		WHERE pc.id = [selectedCharacterId];
 		
--- get information on one character (skills, items, stats)
+-- get information on one character (skill count, item count, stats)
+
 SELECT p.userName,
 	pc.characterName, 
 	cClass.className,
@@ -104,15 +123,29 @@ left join(
 ) cItm on cItm.id = pc.id
 WHERE pc.id = [selectedCharacterID]
 
+
 	
--- UPDATE, DELETE, etc.
+-- UPDATE, DELETE, etc.:
+
 -- change player's email address
 
 UPDATE player SET email = [newEmail] WHERE id = [currentPlayerId];
 
+-- change character attributes
+
+UPDATE playerCharacter SET 
+			level = [newLevel], 
+			health = [newHealth], 
+			strength = [newStrength],
+			WHERE id = [id];
+
 -- delete player row
 
 DELETE FROM player WHERE id = [currentPlayerId];
+
+-- delete a character
+
+DELETE FROM playerCharacter WHERE id = [charToDelete];
 
 -- destroy item instance
 
