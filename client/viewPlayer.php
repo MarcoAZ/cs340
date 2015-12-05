@@ -11,7 +11,14 @@ checkSession();
 </head>
 
 <body>
-	<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
+	<p>
+	<a href="players.php">Players</a> | 
+	<a href="playerCharacters.php">Characters</a> |
+	<a href="cClasses.php">Classes</a> |
+	<a href="itemClasses.php">Items</a> |
+	<a href="skillClasses.php">Skills</a> |	
+	</p>
+	
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
 <!-- player details table -->

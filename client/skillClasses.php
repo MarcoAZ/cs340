@@ -24,19 +24,19 @@ checkSession();
 	
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
-<!-- table of Character Classes -->
-	<div id="itemClassesTable">
+<!-- table of skills -->
+	<div id="skillsTable">
 		<table>
-			<caption>Item Classes</caption>
+			<caption>Skills</caption>
 			<tr>
-				<th>Item ID</th>
-				<th>Item Name</th>
+				<td>Skill ID</td>
+				<td>Skill Name</td>
 			</tr>
 			
 <!-- Now, populate the table -->
 <?php
-	// prepare statement to get the contents of 'player'
-	$stmt = $mysqli->prepare("SELECT id, itemName FROM itemClass;");
+	// prepare statement to get the contents of 'skill'
+	$stmt = $mysqli->prepare("SELECT id, skillName FROM skill;");
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
@@ -45,13 +45,13 @@ checkSession();
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	// bind the results to variables and display the results
-	if(!$stmt->bind_result($classId, $className)){
+	if(!$stmt->bind_result($skillId, $skillName)){
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	while($stmt->fetch()){
-	 echo "<tr>\n<td>" . $classId . "\n</td>\n<td>\n" . 
-	 "<a href=\"itemByChar.php?itemId=" . $classId . "&itemName=" . $className .
-	 "\">" . $className . "</a></td>\n</tr>\n";
+		echo "<tr>\n<td>\n" . $skillId . "\n</td>\n<td>\n" .
+			"<a href=\"skillByPlayer.php?skillId=" . $skillId . "&skillName=" . $skillName . "\">" . 	
+	  		$skillName . "</a>\n</td>\n</tr>";
 	}
 	$stmt->close();
 ?>
@@ -60,17 +60,29 @@ checkSession();
 	</div>
 	<br />
 	
-<!-- a form to delete class info -->
-	<div id=deleteIClassForm">
-		<form method="post" action="deleteIClass.php">
+<!-- a form to create a skill -->
+	<div id=createSkillForm">
+		<form method="post" action="createSkill.php" method="POST">
 			<fieldset>
-				<legend>Delete Item Class</legend>
+				<legend>Create a New Skill</legend>
+				Skill Name:
+				<input type="text" name="skillName">
+				<input type="submit" name="createSkillButton" value="Create Skill"></input>
+			</fieldset>
+		</form>
+	</div>
+
+<!-- form to delete a skill -->
+	<div id=deleteSkillForm">
+		<form method="post" action="deleteSClass.php">
+			<fieldset>
+				<legend>Delete Skill</legend>
 				<p>
-					<select name="classToDelete">
+					<select name="skillToDelete">
 <?php
 	// get a list of classes
 
-	$stmt = $mysqli->prepare("SELECT id, itemName FROM itemClass;");
+	$stmt = $mysqli->prepare("SELECT id, skillName FROM skill;");
 	if(!$stmt) {
 		echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
 	}
@@ -79,34 +91,22 @@ checkSession();
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	// bind the results to variables and display the results
-	if(!$stmt->bind_result($classId, $className)){
+	if(!$stmt->bind_result($skillId, $skillName)){
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	$numRows = 0;
 	while($stmt->fetch()){
 		$numRows++;
-		echo "<option value=\"" . $classId . "\">" . $classId . ": " . $className . "</option>";
+		echo "<option value=\"" . $skillId . "\">" . $skillId . ": " . $skillName . "</option>";
 	}
 	if(!$numRows) {
-		echo "<option value=\"\">No more classes left!</option>";
+		echo "<option value=\"\">No more skills left!</option>";
 	}
 	$stmt->close();
 ?>
 					
 				</p>			
-				<p><input type="submit" name="delete" value="Delete Class"></p>
-			</fieldset>
-		</form>
-	</div>
-	
-<!-- form to add a class -->	
-	<div id="addIClassForm">
-		<form method="post" action="addIClass.php">
-			<fieldset>
-				<legend>Add a new item class</legend>
-				
-				<p>New class name: <input type="text" name="className" required /></p>
-				<p><input type="submit" name="addClass" value="Add Class"></p>
+				<p><input type="submit" name="delete" value="Delete Skill"></p>
 			</fieldset>
 		</form>
 	</div>

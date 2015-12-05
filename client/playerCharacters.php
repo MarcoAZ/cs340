@@ -12,7 +12,16 @@ checkSession();
 </head>
 
 <body>
-<p><a href="players.php">Players</a> | <a href="playerCharacters.php"> Characters </a></p>
+	<div id="nav">
+		<fieldset>
+			<a href="players.php">Players</a> | 
+			<a href="playerCharacters.php">Characters</a> |
+			<a href="cClasses.php">Classes</a> |
+			<a href="itemClasses.php">Items</a> |
+			<a href="skillClasses.php">Skills</a>
+		</fieldset>
+	</div>
+	
 <p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
 <!-- table of characters -->
@@ -27,18 +36,42 @@ checkSession();
 				<th>Level</th>
 				<th>Health</th>
 				<th>Strength</th>
-				<th>Skills</th>
-				<th>Items</th>
+				<th><a href="skillClasses.php">Skills</a></th>
+				<th><a href="itemClasses.php">Items</a></th>
 			</tr>
 			
 <!-- Now, populate the table -->
 <?php
 	// prepare statement to get the contents of 'player'
 	$stmt = $mysqli->prepare("
-		SELECT pc.id, characterName, p.userName, cc.className, level, health, strength
-		FROM playerCharacter pc INNER JOIN player p ON pc.playerId = p.id
-		INNER JOIN characterClass cc ON pc.classId = cc.id
-		ORDER BY p.userName;
+		SELECT p.id,
+			pc.id, 
+			p.userName,
+			pc.characterName, 
+			cClass.className,
+			pc.level, 
+			pc.health, 
+			pc.strength, 
+			IFNULL(cSkl.skillCount, 0) skillCount,
+			IFNULL(cItm.itemCount, 0) itemCount
+		from player p
+		inner join playerCharacter pc on p.id = pc.playerId
+		inner join characterClass cClass on cClass.id = pc.classId
+		left join(
+			SELECT pc.id, count(pcs.skillId) skillCount
+			FROM playerCharacter pc
+				left join pCharSkill pcs on pc.id=pcs.pCharId
+				left join skill s on s.id = pcs.skillId
+			GROUP BY pc.id
+		) cSkl on pc.id = cSkl.id
+		left join(
+			SELECT pc.id, count(itmI.id) itemCount
+			FROM playerCharacter pc
+				left join itemInstance itmI on pc.id = itmI.owner
+				left join itemClass itmC on itmI.classId = itmC.id
+		
+			GROUP BY pc.id
+		) cItm on cItm.id = pc.id	
 	");
 	
 	if(!$stmt) {
@@ -49,7 +82,8 @@ checkSession();
 		echo "Execute failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
 	// bind the results to variables and display the results
-	$stmt->bind_result($cId, $cName, $cOwner, $cClass, $cLevel, $cHealth, $cStrength);	
+	$stmt->bind_result($pId, $cId, $cOwner, $cName, $cClass, $cLevel, $cHealth, $cStrength,
+			$skillCount, $itemCount );	
 	if(!($stmt)) {
 		echo "Bind failed: "  . $mysqli->connect_errno . " " . $mysqli->connect_error;
 	}
@@ -65,9 +99,9 @@ checkSession();
 			$cHealth . "</td>\n<td>" . 
 			$cStrength . "</td>\n<td>" .
 			"<a href=\"skills.php?cId=" . $cId . "&cName=" . $cName . 
-			"\">See Skills</a>" . "</td>\n<td>" .
+			"\">" . $skillCount . "</a>" . "</td>\n<td>" .
 			"<a href=\"pCharItems.php?cId=" . $cId . "&cName=" . $cName . 
-			"\">See Items</a>" . "</td>\n" .	
+			"\">" . $itemCount . "</a>" . "</td>\n" .	
 			"</tr>";
 	}
 	$stmt->close();
