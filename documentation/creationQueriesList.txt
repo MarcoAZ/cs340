@@ -1,0 +1,204 @@
+-- create table queries
+
+CREATE TABLE `itemClass` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`itemName` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`itemName`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `characterClass` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`className` varchar(255) NOT NULL,
+	`startLevel` tinyint UNSIGNED DEFAULT 1,
+	`startHealth` smallint UNSIGNED DEFAULT 100,
+	`startStrength` smallint UNSIGNED NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`className`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `player` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`userName` varChar(255) NOT NULL,
+	`email` varChar(255),
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`userName`),
+	UNIQUE KEY (`email`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `skill` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`skillName` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`skillName`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `playerCharacter` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`characterName` varchar(255) NOT NULL,
+	`level` tinyint UNSIGNED NOT NULL,
+	`health` smallint UNSIGNED NOT NULL,
+	`strength` smallint UNSIGNED NOT NULL,
+	`playerId` int NOT NULL,
+	`classId` int NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY (`characterName`),
+	FOREIGN KEY (`classId`) 
+		REFERENCES `characterClass`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (`playerId`) 
+		REFERENCES `player`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE `itemInstance` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`classId` int NOT NULL,
+	`owner` int NOT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`classId`) 
+		REFERENCES `itemClass`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (`owner`) 
+		REFERENCES `playerCharacter`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE `pCharSkill` (
+	`pCharId` int NOT NULL,
+	`skillId` int NOT NULL,
+	PRIMARY KEY (`pCharId`, `skillId`),
+	FOREIGN KEY (`pCharId`) 
+		REFERENCES `playerCharacter`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (`skillId`) 
+		REFERENCES `skill`(`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE	
+) ENGINE=InnoDB;
+
+-- populate tables
+-- characterClass insert queries
+
+INSERT INTO characterClass (className, startStrength)
+values ("warrior", 50);
+
+INSERT INTO characterClass (className, startStrength)
+values ("sorcerer", 10);
+
+INSERT INTO characterClass (className, startStrength)
+values ("archer", 25);
+
+-- itemClass insert queries
+
+INSERT INTO itemClass (itemName)
+values ("SteelShortSword");
+
+INSERT INTO itemClass (itemName)
+values ("SteelLongSword");
+
+INSERT INTO itemClass (itemName)
+values ("WornBow");
+
+INSERT INTO itemClass (itemName)
+values ("SuperbBow");
+
+INSERT INTO itemClass (itemName)
+values ("LeatherShield");
+
+INSERT INTO itemClass (itemName)
+values ("IronShield");
+
+-- skill insert queries
+
+INSERT INTO skill (skillName)
+values ("HealingMagic");
+
+INSERT INTO skill (skillName)
+values ("FireMagic");
+
+INSERT INTO skill (skillName)
+values ("Stealth");
+
+INSERT INTO skill (skillName)
+values ("ArmorRepair");
+
+-- player insert queries
+
+INSERT INTO player (userName, email) 
+values ("smartypants", "jsmith@blahblah.com");
+
+INSERT INTO player (userName, email) 
+values ("dragonSlayer", "rick321@something.com");
+
+INSERT INTO player (userName, email) 
+values ("rogolfoTheBrave", "randomperson@blahblah.com");
+
+-- playerCharacter insert queries
+
+INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId)
+values ("Rognar", 
+	(SELECT startLevel FROM characterClass WHERE className = "warrior"),
+	(SELECT startHealth FROM characterClass WHERE className = "warrior"),
+	(SELECT startStrength FROM characterClass WHERE className = "warrior"),
+	(SELECT id FROM player WHERE userName = "rogolfoTheBrave"),
+	(SELECT id FROM characterClass WHERE className = "warrior")
+);
+
+INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId)
+values ("Drognestia",
+	(SELECT startLevel FROM characterClass WHERE className = "sorcerer"),
+	(SELECT startHealth FROM characterClass WHERE className = "sorcerer"),
+	(SELECT startStrength FROM characterClass WHERE className = "sorcerer"),
+	(SELECT id FROM player WHERE userName = "smartypants"),
+	(SELECT id FROM characterClass WHERE className = "sorcerer")
+);
+
+INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId)
+values ("Glimbloy",
+	(SELECT startLevel FROM characterClass WHERE className = "archer"),
+	(SELECT startHealth FROM characterClass WHERE className = "archer"),
+	(SELECT startStrength FROM characterClass WHERE className = "archer"),
+	(SELECT id FROM player WHERE userName = "dragonSlayer"),
+	(SELECT id FROM characterClass WHERE className = "archer")
+);
+
+-- pCharSkill insert queries
+
+INSERT INTO pCharSkill (pCharId, skillId)
+values (
+	(SELECT pc.id FROM playerCharacter pc WHERE pc.characterName = "Drognestia"),
+	(SELECT s.id FROM skill s WHERE s.skillName = "FireMagic")
+);
+
+INSERT INTO pCharSkill (pCharId, skillId)
+values (
+	(SELECT pc.id FROM playerCharacter pc WHERE pc.characterName = "Glimbloy"),
+	(SELECT s.id FROM skill s WHERE s.skillName = "ArmorRepair")
+);
+
+-- itemInstance insert queries
+
+INSERT INTO itemInstance (classId, owner)
+values (
+	(SELECT id FROM itemClass WHERE itemName = "SteelShortSword"),
+	(SELECT id FROM playerCharacter WHERE characterName = "Drognestia")
+);
+
+INSERT INTO itemInstance (classId, owner)
+values (
+	(SELECT id FROM itemClass WHERE itemName = "WornBow"),
+	(SELECT id FROM playerCharacter WHERE characterName = "Rognar")
+);
+
+INSERT INTO itemInstance (classId, owner)
+values (
+	(SELECT id FROM itemClass WHERE itemName = "LeatherShield"),
+	(SELECT id FROM playerCharacter WHERE characterName = "Glimbloy")
+);
+
