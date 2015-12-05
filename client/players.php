@@ -87,7 +87,7 @@ checkSession();
 <!-- link to create a character for this player -->
 	<div id="newCharacter">
 		<fieldset>
-			<legend>Go to Characters Page to Add a Character</legend>
+			<legend>Go to Characters to Add or Delete a Character</legend>
 			<form action="playerCharacters.php" method="GET">
 				<input type="submit" value="Go to Characters"></input>
 			</form>

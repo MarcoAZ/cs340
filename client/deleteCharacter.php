@@ -2,26 +2,19 @@
 require("config.php");
 
 // get the info from the post
-$creator = $_SESSION['id'];
-$class = $_POST['classRef'];
-$name = $_POST['name'];
+$charToDelete = $_POST['charToDelete'];
 
 // prepare the query and bind the variables
 //starting stats derivred from class selected and the characterClass table
 $stmt = $mysqli->prepare("
-	INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId) 
-	VALUES (?,
-	(SELECT startLevel FROM characterClass WHERE id = ?), 
-	(SELECT startHealth FROM characterClass WHERE id = ?),
-	(SELECT startStrength FROM characterClass WHERE id = ?),
-	?, ?);");
-$stmt->bind_param('siiiii', $name, $class, $class, $class, $creator, $class);
-
+	DELETE FROM playerCharacter WHERE id = ?;
+");
+$stmt->bind_param('i', $charToDelete);
 
 // execute and report the result
 $status = $stmt->execute();
 if($status) {
-	echo "Added " . $stmt->affected_rows . " rows to playerCharacter.";
+	echo "Deleted " . $stmt->affected_rows . " rows from playerCharacter.";
 } else {
 	echo "Execute failed: "  . $stmt->errno . " " . $stmt->error;
 }
