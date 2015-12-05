@@ -37,7 +37,7 @@ $stmt->close();
 <?php
 	echo "<input type=\"hidden\" name=\"cId\" value=\"" . $charId . "\" />";
 	echo "<input type=\"hidden\" name=\"cName\" value=\"" . $charName . "\" />";
-	echo "<input type=\"submit\" value=\"Return to Skills Table\">"; 
+	echo "<input type=\"submit\" value=\"Return to Character's Skills\">"; 
 ?>
 	</form>
 </body>
