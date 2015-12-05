@@ -228,6 +228,10 @@ INSERT INTO player (userName, email) VALUES ([userNameInput], [emailInput]);
 
 INSERT INTO itemInstance (classId, owner) VALUES ([selectedItemId], [currentCharacterName] );
 
+-- assign a skill to a character
+
+INSERT INTO pCharSkill (pCharId, skillId) VALUES ([selectedCharacter], [selectedSkill]);"
+
 -- query database for user id of specified user
 
 SELECT id FROM player WHERE userName = [selectedUsername];
@@ -252,11 +256,25 @@ INSERT INTO playerCharacter (characterName, level, health, strength, playerId, c
 
 SELECT id, className FROM characterClass ORDER BY id;
 
+-- get a list of item classes
+
+SELECT id, itemName FROM itemClass;
+
+-- get a list of players that have an instance of the chosen item
+
+SELECT pc.id, pc.characterName FROM playerCharacter pc
+		INNER JOIN itemInstance ii ON pc.id = ii.owner
+		WHERE ii.classId = [selectedItem];
+
+-- get the contents of 'skill'
+
+SELECT id, skillName FROM skill;
+
 -- get all the skills a particular character has
 
 SELECT s.id, s.skillName 
 FROM skill s INNER JOIN pCharSkill ps ON s.id = ps.skillId
-WHERE ps.pCharId = ?;
+WHERE ps.pCharId = [selectedCharacter];
 
 -- get a list of skills the character does not have
 
@@ -317,5 +335,15 @@ DELETE FROM player WHERE id = [currentPlayerId];
 
 DELETE FROM itemInstance WHERE id = [selectedItemId];
 
+-- delete a skill
 
+DELETE FROM skill WHERE id = [skillToDelete];
+
+-- delete a character class
+
+DELETE FROM characterClass WHERE id = [classToDelete];
+
+-- delete an item class
+
+DELETE FROM itemClass WHERE id = [classToDelete];
 
