@@ -8,9 +8,9 @@ SELECT id, userName, email FROM player;
 
 INSERT INTO player (userName, email) VALUES ([userNameInput], [emailInput]);
 
--- create a new item instance to give to a character
+-- create a new item instance and give to a character
 
-INSERT INTO itemInstance (classId, owner) VALUES ([selectedItemId], [currentCharacterName] );
+INSERT INTO itemInstance (classId, owner) VALUES ([selectedItemId], [currentCharacterName]);
 
 -- assign a skill to a character
 
@@ -39,6 +39,10 @@ SELECT pc.id, characterName, p.userName, cc.className, level, health, strength
 	INNER JOIN characterClass cc ON pc.classId = cc.id
 	ORDER BY p.userName;
 
+-- get a list of character classes
+
+SELECT id, className FROM characterClass ORDER BY id;
+
 -- create a new player character
 
 INSERT INTO playerCharacter (characterName, level, health, strength, playerId, classId) 
@@ -53,10 +57,6 @@ INSERT INTO playerCharacter (characterName, level, health, strength, playerId, c
 SELECT pc.id, pc.characterName FROM playerCharacter pc
 	INNER JOIN player p ON pc.playerId = p.id
 	WHERE p.id = [currentUser];
-
--- get a list of character classes
-
-SELECT id, className FROM characterClass ORDER BY id;
 
 -- get a list of item classes
 
@@ -88,10 +88,10 @@ WHERE s.id NOT IN (
 -- get a table of items possessed by a character
 
 SELECT ii.id, ic.itemName 
-		FROM itemInstance ii 
-		INNER JOIN itemClass ic ON ii.classId = ic.id
-		INNER JOIN playerCharacter pc ON ii.owner = pc.id
-		WHERE pc.id = [selectedCharacterId];
+	FROM itemInstance ii 
+	INNER JOIN itemClass ic ON ii.classId = ic.id
+	INNER JOIN playerCharacter pc ON ii.owner = pc.id
+	WHERE pc.id = [selectedCharacterId];
 		
 -- get information on one character (skill count, item count, stats)
 
@@ -123,8 +123,6 @@ left join(
 ) cItm on cItm.id = pc.id
 WHERE pc.id = [selectedCharacterID]
 
-
-	
 -- UPDATE, DELETE, etc.:
 
 -- change player's email address

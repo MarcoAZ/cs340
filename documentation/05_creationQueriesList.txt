@@ -82,7 +82,10 @@ CREATE TABLE `pCharSkill` (
 		ON DELETE CASCADE	
 ) ENGINE=InnoDB;
 
+
+
 -- populate tables
+
 -- characterClass insert queries
 
 INSERT INTO characterClass (className, startStrength)
