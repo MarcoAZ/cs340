@@ -42,3 +42,4 @@ $stmt->close();
 	</form>
 
 </body>
+</html>

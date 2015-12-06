@@ -116,8 +116,10 @@ checkSession();
 	}
 	$stmt->close();
 ?>
+
 	</table>
 	
+	<!-- form to edit character attributes -->
 	<fieldset>
 		<legend>Edit Attributes</legend>
 		<form action="editCharacter.php" method="POST">
@@ -130,6 +132,8 @@ checkSession();
 ?>
 		</form>
 	</fieldset>
+	
+	<!-- links to edit character's skills and items -->
 	<fieldset>
 	<legend>Skills and Items</legend>
 <?php
@@ -138,4 +142,4 @@ checkSession();
 ?>
 	</fieldset>
 </body>
-
+</html>

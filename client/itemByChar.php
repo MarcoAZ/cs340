@@ -69,3 +69,4 @@ checkSession();
 ?>
 	</table>
 </body>
+</html>

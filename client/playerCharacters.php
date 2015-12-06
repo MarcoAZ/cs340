@@ -24,7 +24,7 @@ checkSession();
 	
 <p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
-<!-- table of characters -->
+<!-- Create table of characters -->
 	<div id="playersTable">
 		<table>
 			<caption>Characters</caption>
@@ -40,7 +40,7 @@ checkSession();
 				<th><a href="itemClasses.php">Items</a></th>
 			</tr>
 			
-<!-- Now, populate the table -->
+<!-- Now, populate the table with some details -->
 <?php
 	// prepare statement to get the contents of 'player'
 	$stmt = $mysqli->prepare("

@@ -21,6 +21,7 @@ if($status) {
 	
 $stmt->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,3 +35,4 @@ $stmt->close();
 		<input type="submit" value="Return to Character Table"/>
 	</form>
 </body>
+</html>
