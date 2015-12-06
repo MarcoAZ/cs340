@@ -6,7 +6,9 @@
 </head>
 
 <body>
-	<h1> WELCOME PAGE </h1>
+	<h1> WELCOME! </h1>
+	
+	<!-- existing user login -->
 	<form method="post" action="login.php">
 		<fieldset>
 				<legend>Log in</legend>
@@ -15,6 +17,7 @@
 		</fieldset>
 	</form>
 
+	<!-- new user form -->
 	<div id="userInfoForm">
 		<form method="post" action="addPlayer.php">
 			<fieldset>

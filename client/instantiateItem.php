@@ -37,3 +37,4 @@ echo "<input type=\"hidden\" name=\"cName\" value=\"" . $charName . "\"/>";
 		<input type="submit" value="Return to Character's Items Table"/>
 	</form>
 </body>
+</html>

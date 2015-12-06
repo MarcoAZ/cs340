@@ -30,12 +30,15 @@ $stmt->close();
 
 <body>
 
-
+	<!-- button to get back to this character's items -->
 	<form method="GET" action="pCharItems.php">
+	
 <?php
 echo "<input type=\"hidden\" name=\"cId\" value=\"" . $charId . "\"/>";
 echo "<input type=\"hidden\" name=\"cName\" value=\"" . $charName . "\"/>";
 ?>
+
 		<input type="submit" value="Return to Character's Items Table"/>
 	</form>
 </body>
+</html>

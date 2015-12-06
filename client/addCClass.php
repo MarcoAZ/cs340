@@ -21,6 +21,7 @@ if($status) {
 	
 $stmt->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>

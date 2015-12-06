@@ -112,3 +112,5 @@ checkSession();
 	$stmt->close();
 ?>
 	</table>
+</body>
+</html>

@@ -24,7 +24,7 @@ checkSession();
 	
 	<p> Logged in as: <?php echo $_SESSION["userName"] ?>   | <a href="logout.php">Log out</a> </p>
 
-<!-- table of Character Classes -->
+<!-- table of item Classes -->
 	<div id="itemClassesTable">
 		<table>
 			<caption>Item Classes</caption>

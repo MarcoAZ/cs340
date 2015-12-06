@@ -37,10 +37,6 @@ require("config.php");
 		{
 			redirect("welcome.php?login=false");
 		}
-
 }
-
-
-
 
 ?>

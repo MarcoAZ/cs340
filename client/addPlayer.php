@@ -52,6 +52,7 @@ else {
 	
 $stmt->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,3 +66,4 @@ $stmt->close();
 		<input type="submit" value="Go to Player Table"/>
 	</form>
 </body>
+</html>

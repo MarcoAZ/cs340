@@ -36,7 +36,7 @@ checkSession();
 				<th>Starting Strength</th>
 			</tr>
 			
-<!-- Now, populate the table -->
+<!-- populate the table -->
 <?php
 	// prepare statement to get the contents of 'player'
 	$stmt = $mysqli->prepare(

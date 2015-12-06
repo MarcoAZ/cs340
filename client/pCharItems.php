@@ -26,10 +26,6 @@ checkSession();
 <!-- table of skills -->
 	<div id="itemsTable">
 		<table>
-
-
-		
-		
 			<caption>
 <?php 
 	echo "<a href=\"viewCharacter.php?cId=" . $_GET['cId'] . "&cName=" . $_GET['cName'] . "\">" . 
